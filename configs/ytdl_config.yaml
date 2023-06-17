@@ -1,0 +1,10 @@
+format: 'bestaudio/best'
+outtmpl: '%(extractor)s-%(id)s-%(title)s.%(ext)s'
+restrictfilenames: Yes
+nocheckcertificate: Yes
+ignoreerrors: No
+logtostderr: No
+quiet: Yes
+no_warning: Yes
+default_search: 'auto'
+source_address: '0.0.0.0'
