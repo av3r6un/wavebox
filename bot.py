@@ -44,7 +44,7 @@ class WaveBox(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		if after.channel.id == Config.CHANNEL and member.id != Config.BOT_ID:
 			self.welcome_message[member.id] = await after.channel.send(
-				f'Welcome, <@{member.id}>!\nTo discover bot function send "-help".'
+				f'Welcome, <@{member.id}>!\nTo discover bot function send **-help**.'
 			)
 
 	@commands.command(name='j | join', help='Bot joins current voice channel.', aliases=['j'])
