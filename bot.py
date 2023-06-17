@@ -1,7 +1,4 @@
-from datetime import datetime as dt
-
 import discord
-
 from functions import config_loader
 from discord.ext import commands
 from discord.utils import get
@@ -28,7 +25,7 @@ class YTDLSource(discord.PCMVolumeTransformer):
 	@classmethod
 	async def from_url(cls, url, *, loop=None, stream=False):
 		loop = loop or asyncio.get_event_loop()
-		data = await loop.run_in_executor(None, lambda: ytdl.exract_info(url, download=not stream))
+		data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
 		if 'entries' in data:
 			data = data['entries'][0]
 		filename = data['url'] if stream else ytdl.prepare_filename(data)
@@ -42,13 +39,12 @@ class WaveBox(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
-		if after.channel.id == Config.CHANNEL and member.id != Config.BOT_ID:
+		if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID:
 			self.welcome_message[member.id] = await after.channel.send(
-				f'Welcome, <@{member.id}>!\nTo discover bot function send **-help**.',
-				delete_after=10.0
+				f'Welcome, <@{member.id}>!\nTo discover bot function send -help.'
 			)
 
-	@commands.command(name='j | join', help='Bot joins current voice channel.', aliases=['j'])
+	@commands.command(name='join', help='Bot joins current voice channel.', aliases=['j'])
 	async def join(self, ctx):
 		channel = ctx.message.author.voice.channel
 		if ctx.voice_client is not None:
@@ -57,7 +53,7 @@ class WaveBox(commands.Cog):
 		if self.welcome_message[ctx.author.id]:
 			await self.welcome_message[ctx.author.id].delete()
 
-	@commands.command(name='p | play', help='(url) Plays given url in voice channel.', aliases=['p'])
+	@commands.command(name='play', help='(url) Plays given url in voice channel.', aliases=['p'])
 	async def play(self, ctx, *, url=None):
 		await ctx.message.delete()
 		if url:
@@ -69,7 +65,7 @@ class WaveBox(commands.Cog):
 			if ctx.voice_client is not None:
 				ctx.voice_client.resume()
 
-	@commands.command(name='s | stream', help='Streams given url', aliases=['s'])
+	@commands.command(name='stream', help='Streams given url', aliases=['s'])
 	async def stream(self, ctx, *, url):
 		await ctx.message.delete()
 		async with ctx.typing():
@@ -77,7 +73,7 @@ class WaveBox(commands.Cog):
 			ctx.voice_client.play(player, after=lambda e: print(f'Player error: {e}') if e else None)
 		await ctx.send(f'Now playing: {player.title}')
 
-	@commands.command(name='v | volume', help='(0-100) Bot sets volume.', aliases=['v'])
+	@commands.command(name='volume', help='(0-100) Bot sets volume.', aliases=['v', 'vol'])
 	async def volume(self, ctx, *, user_volume: int):
 		await ctx.message.delete()
 		if ctx.voice_client is None:
@@ -86,20 +82,20 @@ class WaveBox(commands.Cog):
 		ctx.voice_client.source.volume = volume
 		await ctx.send(f'Changed volume to {user_volume}%', delete_after=4.0)
 
-	@commands.command(name='ps | pause', help='Pauses current track', aliases=['ps'])
+	@commands.command(name='pause', help='Pauses current track', aliases=['ps'])
 	async def pause(self, ctx):
 		await ctx.message.delete()
 		if ctx.voice_client is not None:
 			ctx.voice_client.pause()
 
-	@commands.command(name='st | stop', help='Stops playing.', aliases=['st'])
+	@commands.command(name='stop', help='Stops playing.', aliases=['st'])
 	async def stop(self, ctx):
 		await ctx.message.delete()
 		await ctx.voice_client.stop()
 
-	@commands.command(name='clear', help='Clears chat from all message (limit=100).', hidden=True)
+	@commands.command(name='clear', help='Clears chat from all message (limit=100).', hidden=True, aliases=['cl'])
 	async def clear(self, ctx):
-		if ctx.channel.id == Config.CHANNEL:
+		if ctx.channel.id in Config.CHANNELS:
 			deleted = await ctx.channel.purge(limit=100)
 			await ctx.send(f'<@{ctx.author.id}> deleted {len(deleted)} messages.', delete_after=4.0)
 

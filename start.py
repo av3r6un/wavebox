@@ -1,11 +1,11 @@
 from discord.ext import commands
-from discord import Intents
 from bot import WaveBox
 from config import Config
 import asyncio
+import discord
 
 
-intents = Intents.default()
+intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(
@@ -17,7 +17,7 @@ bot = commands.Bot(
 
 @bot.event
 async def on_ready():
-	print(f'Logged in as {bot.user}!')
+	print(f'Logged in as {bot.user}! (id: {bot.user.id})')
 	print('-'*40)
 
 

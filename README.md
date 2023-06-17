@@ -8,5 +8,6 @@
 
 ### Requirements
 
- - [**Discord.py**](https://pypi.org/project/discord)
+ - [**Discord.py**](https://pypi.org/project/discord.py/)
  - [**PyYAML**](https://pypi.org/project/PyYAML/)
+ - [**PyNaCl**](https://pypi.org/project/PyNaCl/)
