@@ -1,5 +1,5 @@
 from discord.ext import commands
-from bot import WaveBox
+from main import WaveBox
 from config import Config
 import asyncio
 import discord
