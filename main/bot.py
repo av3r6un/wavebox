@@ -43,6 +43,8 @@ class WaveBox(commands.Cog):
 			self.welcome_message[member.id] = await after.channel.send(
 				f'Welcome, <@{member.id}>!\nTo discover bot function send -help.'
 			)
+		if before.channel.id in Config.CHANNELS and member.id != Config.BOT_ID:
+			await self.welcome_message[member.id].delete()
 
 	@commands.command(name='join', help='Bot joins current voice channel.', aliases=['j'])
 	async def join(self, ctx):
