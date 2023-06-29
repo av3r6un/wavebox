@@ -1,5 +1,5 @@
 format: 'bestaudio/best'
-outtmpl: '%(extractor)s-%(id)s-%(title)s.%(ext)s'
+outtmpl: 'main/static/music/%(title)s.%(ext)s'
 restrictfilenames: Yes
 nocheckcertificate: Yes
 ignoreerrors: No
