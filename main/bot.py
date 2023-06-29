@@ -127,6 +127,7 @@ class WaveBox(commands.Cog):
 		await ctx.message.delete()
 		if sound_name:
 			if ctx.voice_client is None:
+				prev = None
 				if ctx.author.voice:
 					await ctx.author.voice.channel.connect()
 				else:
