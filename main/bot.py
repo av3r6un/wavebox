@@ -60,10 +60,9 @@ class WaveBox(commands.Cog):
 			yaml.safe_dump(conf_file.content, file, encoding='utf-8', allow_unicode=True)
 
 	@staticmethod
-	def end_playing(ctx, e=None):
-		if ctx.voice_client:
-			ctx.voice_client.resume()
-		# asyncio.run_coroutine_threadsafe(self.leave_channel(ctx), self.bot.loop)
+	def end_playing(previous=None, e=None):
+		if previous:
+			previous.resume()
 		if e:
 			print(e)
 
@@ -95,8 +94,8 @@ class WaveBox(commands.Cog):
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):
 		if after.channel:
-			if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID:
-				self.welcome_message[member.id] = await after.channel.send(
+			if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID and before.channel is None:
+				self.welcome_message[member.id] = await member.send(
 					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.'
 				)
 		if before.channel is not None and after.channel is None and member.id != Config.BOT_ID:
@@ -133,12 +132,15 @@ class WaveBox(commands.Cog):
 				else:
 					await ctx.send("You are not connected to a voice channel.")
 			elif ctx.voice_client.is_playing():
+				prev = ctx.voice_client
 				ctx.voice_client.pause()
+			else:
+				prev = None
 			if sound_name in self.files_conf.content.values():
 				for filename, sound in self.files_conf.content.items():
 					if sound_name == sound:
 						ctx.voice_client.play(discord.FFmpegPCMAudio(f'main/static/voices/{filename}', **ffmpeg_options),
-											  after=lambda e: self.end_playing(ctx, e))
+											  after=lambda e: self.end_playing(prev, e))
 						await ctx.send(f'Проигрываю: {sound}', delete_after=5.0)
 			else:
 				await ctx.send('Звук не найден!', delete_after=5.0)
