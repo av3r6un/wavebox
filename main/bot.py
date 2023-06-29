@@ -1,5 +1,4 @@
 from main.functions import config_loader
-from transliterate import translit, detect_language
 from discord.ext import commands
 from threading import Thread
 from config import Config
