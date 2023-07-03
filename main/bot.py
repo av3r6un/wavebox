@@ -95,7 +95,7 @@ class WaveBox(commands.Cog):
 	async def on_voice_state_update(self, member, before, after):
 		if after.channel:
 			if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID and before.channel is None:
-				self.welcome_message[member.id] = await member.send(
+				self.welcome_message[member.id] = await after.channel.send(
 					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.'
 				)
 		if before.channel is not None and after.channel is None and member.id != Config.BOT_ID:
