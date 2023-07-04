@@ -96,7 +96,7 @@ class WaveBox(commands.Cog):
 		if after.channel:
 			if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID and before.channel is None:
 				self.welcome_message[member.id] = await after.channel.send(
-					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.'
+					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.', ephemeral=True
 				)
 		if before.channel is not None and after.channel is None and member.id != Config.BOT_ID:
 			if member.id in self.welcome_message.keys():
@@ -118,9 +118,9 @@ class WaveBox(commands.Cog):
 			await content.save(fp=f'main/static/voices/{filename}')
 			self.files_conf.content[filename] = attachment_m.content
 			self.save_conf('files_conf')
-			await ctx.send('Файл успешно загружен!')
+			await ctx.send('Файл успешно загружен!', ephemeral=True)
 		except Exception as _ex:
-			await ctx.send(embed=self.error_embed(str(_ex)))
+			await ctx.send(embed=self.error_embed(str(_ex)), ephemeral=True)
 
 	@commands.command(name='panel', help='Plays pre-downloaded sounds.', aliases=['pn', 'k'])
 	async def panel(self, ctx, *, sound_name=None):
@@ -146,7 +146,8 @@ class WaveBox(commands.Cog):
 			else:
 				await ctx.send('Звук не найден!', delete_after=5.0)
 		else:
-			await ctx.send('Укажите название файла. Доступные файлы сейчас:\n' + "\n - ".join(self.files_conf.content.values()))
+			await ctx.send('Укажите название файла. Доступные файлы сейчас:\n' + "\n - ".join(self.files_conf.content.values()),
+						   ephemeral=True)
 
 	@commands.command(name='join', help='Bot joins current voice channel.', aliases=['j'])
 	async def join(self, ctx):
@@ -181,7 +182,7 @@ class WaveBox(commands.Cog):
 	async def volume(self, ctx, *, user_volume: int):
 		await ctx.message.delete()
 		if ctx.voice_client is None:
-			return await ctx.send('Not connected to a voice channel.')
+			return await ctx.send('Not connected to a voice channel.', ephemeral=True)
 		volume = user_volume / 100
 		ctx.voice_client.source.volume = volume
 		await ctx.send(f'Changed volume to {user_volume}%', delete_after=4.0)
@@ -220,7 +221,7 @@ class WaveBox(commands.Cog):
 			if ctx.author.voice:
 				await ctx.author.voice.channel.connect()
 			else:
-				await ctx.send("You are not connected to a voice channel.")
+				await ctx.send("You are not connected to a voice channel.", ephemeral=True)
 		elif ctx.voice_client.is_playing():
 			ctx.voice_client.stop()
 
