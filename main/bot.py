@@ -96,7 +96,7 @@ class WaveBox(commands.Cog):
 		if after.channel:
 			if after.channel.id in Config.CHANNELS and member.id != Config.BOT_ID and before.channel is None:
 				self.welcome_message[member.id] = await after.channel.send(
-					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.', ephemeral=True
+					f'Welcome, <@{member.id}>!\nTo discover bot function send -help.', hidden=True
 				)
 		if before.channel is not None and after.channel is None and member.id != Config.BOT_ID:
 			if member.id in self.welcome_message.keys():
