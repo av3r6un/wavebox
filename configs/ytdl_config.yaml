@@ -1,10 +1,10 @@
 format: 'bestaudio/best'
 outtmpl: 'main/static/music/%(title)s.%(ext)s'
-restrictfilenames: Yes
-nocheckcertificate: Yes
-ignoreerrors: No
-logtostderr: No
-quiet: Yes
-no_warning: Yes
-default_search: 'auto'
+restrictfilenames: yes
+nocheckcertificate: yes
+ignoreerrors: n
+logtostderr: n
+quiet: yes
+no_warning: yes
+default_search: auto
 source_address: '0.0.0.0'
