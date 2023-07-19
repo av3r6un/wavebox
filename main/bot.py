@@ -159,7 +159,7 @@ class WaveBox(commands.Cog):
 				for filename, sound in self.files_conf.content.items():
 					if sound_name == sound:
 						self.player_type = 'voice'
-						ctx.voice_client.play(discord.FFmpegPCMAudio(f'main/static/voices/{filename}', **ffmpeg_options),
+						ctx.voice_client.play(discord.FFmpegPCMAudio(f'main/static/voices/{filename}', **self.s.ffmpeg_options),
 											  after=lambda e: self.end_player(e) if e else None)
 						await ctx.send(self.s.MESSAGES.now_playing.replace('<track>', sound),
 									   delete_after=self.s.system_message_lifetime)
