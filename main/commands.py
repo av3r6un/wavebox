@@ -2,6 +2,7 @@ from main.functions import ErrorWatcher
 from datetime import datetime as dt
 from discord.ext import commands
 import discord
+import random
 
 
 class Commands:
@@ -9,6 +10,7 @@ class Commands:
 		self.bot = bot
 		self.s = settings
 		self.guild = discord.Object(id=self.s.guild_with_commands)
+		self.secondary_guild = discord.Object(id=self.s.secondary_guild)
 		self.create_commands()
 
 	def create_commands(self):
@@ -18,6 +20,20 @@ class Commands:
 		)
 		async def audit(interaction: discord.Interaction, timedelta: int = 0):
 			await interaction.response.send_message(embed=self.create_embed_for_errors(timedelta), ephemeral=True)
+
+		@self.bot.tree.command(description="Flips the coin", guild=self.secondary_guild)
+		async def coinflip(interaction: discord.Interaction):
+			coinsides = ['Орёл', 'Решка']
+			await interaction.response.send_message(random.choice(coinsides))
+
+		@self.bot.tree.command(description="Rolls the dice", guild=self.secondary_guild)
+		@discord.app_commands.describe(
+			dice_range="Maximum value that can be. Default 6"
+		)
+		async def roll(interaction: discord.Interaction, dice_range: int = 6):
+			number = random.randint(1, dice_range)
+			choice = '{:0>3d}'.format(number)
+			await interaction.response.send_message(f'> `{choice}`')
 
 	def create_embed_for_errors(self, timedelta):
 		watcher = ErrorWatcher()
