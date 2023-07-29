@@ -25,13 +25,13 @@ class YTDLSource(discord.PCMVolumeTransformer):
 		return ytdl.prepare_filename(self.data)
 
 	@classmethod
-	async def from_url(cls, url, ffmpeg_options, loop=None, stream=False):
+	async def from_url(cls, url, ffmpeg_options, loop=None, stream=False, volume=0.4):
 		loop = loop or asyncio.get_event_loop()
 		data = await loop.run_in_executor(None, lambda: ytdl.extract_info(url, download=not stream))
 		if 'entries' in data:
 			data = data['entries'][0]
 		filename = data['url'] if stream else ytdl.prepare_filename(data)
-		return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data)
+		return cls(discord.FFmpegPCMAudio(filename, **ffmpeg_options), data=data, volume=volume)
 
 
 class WaveBox(commands.Cog):
@@ -48,7 +48,7 @@ class WaveBox(commands.Cog):
 		self.warn_message = None
 
 	async def _set_source(self, url):
-		player = await YTDLSource.from_url(url, self.s.FFMPEG_OPTIONS)
+		player = await YTDLSource.from_url(url, self.s.FFMPEG_OPTIONS, volume=self.s.initial_volume)
 		return player
 
 	@tasks.loop(minutes=1)
@@ -87,6 +87,7 @@ class WaveBox(commands.Cog):
 			self.source.cleanup()
 		await self.now_playing.delete()
 		self.now_playing = None
+		print(self.now_playing)
 		try:
 			os.remove(filename)
 		except FileNotFoundError:
@@ -192,7 +193,7 @@ class WaveBox(commands.Cog):
 		if url:
 			async with ctx.typing():
 				self.source = await self._set_source(url)
-				ctx.voice_client.play(self.source, after=lambda e: self.end_player(e) if e else None)
+				ctx.voice_client.play(self.source, after=lambda e: self.end_player(e))
 			self.now_playing = await ctx.send(self.s.MESSAGES.now_playing.replace('<track>', self.source.title))
 		else:
 			if ctx.voice_client is not None:
@@ -205,7 +206,7 @@ class WaveBox(commands.Cog):
 		self.last_action['time'] = dt.now().timestamp()
 		async with ctx.typing():
 			self.source = await self._set_source(url)
-			ctx.voice_client.play(self.source, after=lambda e: self.end_player(e) if e else None)
+			ctx.voice_client.play(self.source, after=lambda e: self.end_player(e))
 		self.now_playing = await ctx.send(self.s.MESSAGES.now_playing.replace('<track>', self.source.title))
 
 	@commands.command(name='volume', help='(0-100) Bot sets volume.', aliases=['v', 'vol'])
