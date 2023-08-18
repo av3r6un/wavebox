@@ -27,8 +27,8 @@ class Commands:
 			coinsides = ['eagle_coin', 'tails_coin']
 			coin_sides = {'eagle_coin': 'Орёл', 'tails_coin': 'Решка'}
 			choice = random.choice(coinsides)
-			emoji = get(self.bot.get_all_emojis(), name=choice)
-			message = f'{emoji} (`{coin_sides[choice]}`)'
+			# emoji = get(self.bot.get), name=choice)
+			# message = f'{emoji} (`{coin_sides[choice]}`)'
 			await interaction.response.send_message(message)
 
 		@self.bot.tree.command(description="Rolls the dice", guild=self.secondary_guild)
@@ -39,6 +39,11 @@ class Commands:
 			number = random.randint(1, dice_range)
 			choice = '{:0>3d}'.format(number)
 			await interaction.response.send_message(f'> `{choice}`')
+
+		@self.bot.tree.command(description='Get Emoji id', guild=self.secondary_guild)
+		@discord.app_commands.describe(emoji="Emoji")
+		async def emoji(interaction: discord.Interaction, emoji_: discord.Emoji):
+			await interaction.response.send_message(f'{emoji_.id}')
 
 	def create_embed_for_errors(self, timedelta):
 		watcher = ErrorWatcher()
