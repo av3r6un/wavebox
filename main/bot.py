@@ -243,6 +243,10 @@ class WaveBox(commands.Cog):
 			deleted = await ctx.channel.purge(limit=100)
 			await ctx.send(f'<@{ctx.author.id}> deleted {len(deleted)} messages.', delete_after=self.s.system_message_lifetime)
 
+	@commands.command(name='emoji', hidden=True)
+	async def emoji(self, ctx, *, emoji):
+		await ctx.send(f'{emoji.id}')
+
 	@commands.command(name='leave', help='Bot leaves current voice channel.', aliases=['l'])
 	async def leave(self, ctx):
 		await ctx.message.delete()
