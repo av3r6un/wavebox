@@ -23,9 +23,10 @@ class Commands:
 
 		@self.bot.tree.command(description="Flips the coin", guild=self.secondary_guild)
 		async def coinflip(interaction: discord.Interaction):
+			coinsides = ['eagle_coin', 'tails_coin']
 			coin_sides = {'eagle_coin': 'Орёл', 'tails_coin': 'Решка'}
-			choice = random.choice(coin_sides.keys())
-			message = f'{choice} (`{coin_sides[choice]}`)'
+			choice = random.choice(coinsides)
+			message = f':{choice}: (`{coin_sides[choice]}`)'
 			await interaction.response.send_message(message)
 
 		@self.bot.tree.command(description="Rolls the dice", guild=self.secondary_guild)
