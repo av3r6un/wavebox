@@ -245,7 +245,7 @@ class WaveBox(commands.Cog):
 
 	@commands.command(name='emoji', hidden=True)
 	async def emoji(self, ctx, *, emoji):
-		await ctx.send(f'{emoji.id}')
+		await ctx.send(f'{emoji}')
 
 	@commands.command(name='leave', help='Bot leaves current voice channel.', aliases=['l'])
 	async def leave(self, ctx):
