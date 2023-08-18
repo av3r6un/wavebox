@@ -28,8 +28,8 @@ class Commands:
 			emoji_dicts = {'tails_coin': 1141893746879909909, 'eagle_coin': 1141893802181791894}
 			coin_sides = {'eagle_coin': 'Орёл', 'tails_coin': 'Решка'}
 			choice = random.choice(coinsides)
-			emoji = get(self.bot.get_emoji(emoji_dicts[choice]))
-			message = f'{emoji} (`{coin_sides[choice]}`)'
+			emoji = coin_sides[choice]
+			message = f'<:{emoji}:> (`{coin_sides[choice]}`)'
 			await interaction.response.send_message(message)
 
 		@self.bot.tree.command(description="Rolls the dice", guild=self.secondary_guild)
