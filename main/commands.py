@@ -27,7 +27,7 @@ class Commands:
 			coinsides = ['eagle_coin', 'tails_coin']
 			coin_sides = {'eagle_coin': 'Орёл', 'tails_coin': 'Решка'}
 			choice = random.choice(coinsides)
-			emoji = get(bot.get_all_emojis(), name=choice)
+			emoji = get(self.bot.get_all_emojis(), name=choice)
 			message = f'{emoji} (`{coin_sides[choice]}`)'
 			await interaction.response.send_message(message)
 
