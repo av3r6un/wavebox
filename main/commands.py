@@ -25,11 +25,10 @@ class Commands:
 		@self.bot.tree.command(description="Flips the coin", guild=self.secondary_guild)
 		async def coinflip(interaction: discord.Interaction):
 			coinsides = ['eagle_coin', 'tails_coin']
-			emoji_dicts = {'tails_coin': 1141893746879909909, 'eagle_coin': 1141893802181791894}
+			emoji_ids = {'tails_coin': 1141893746879909909, 'eagle_coin': 1141893802181791894}
 			coin_sides = {'eagle_coin': 'Орёл', 'tails_coin': 'Решка'}
 			choice = random.choice(coinsides)
-			emoji = coin_sides[choice]
-			message = f'<:{choice}:> (`{coin_sides[choice]}`)'
+			message = f'<:{choice}:{emoji_ids[choice]}> (`{coin_sides[choice]}`)'
 			await interaction.response.send_message(message)
 
 		@self.bot.tree.command(description="Rolls the dice", guild=self.secondary_guild)
