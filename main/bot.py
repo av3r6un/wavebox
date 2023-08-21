@@ -87,7 +87,6 @@ class WaveBox(commands.Cog):
 			self.source.cleanup()
 		await self.now_playing.delete()
 		self.now_playing = None
-		print(self.now_playing)
 		try:
 			os.remove(filename)
 		except FileNotFoundError:
@@ -191,9 +190,13 @@ class WaveBox(commands.Cog):
 		self.last_action['time'] = dt.now().timestamp()
 		if url:
 			async with ctx.typing():
-				self.source = await self._set_source(url)
-				ctx.voice_client.play(self.source, after=lambda e: self.end_player(e))
-			self.now_playing = await ctx.send(self.s.MESSAGES.now_playing.replace('<track>', self.source.title))
+				try:
+					self.source = await self._set_source(url)
+					ctx.voice_client.play(self.source, after=lambda e: self.end_player(e))
+					self.now_playing = await ctx.send(self.s.MESSAGES.now_playing.replace('<track>', self.source.title))
+				except ydl.DownloadError:
+					self.now_playing = None
+					await ctx.send('Ошибка скачивания файла')
 		else:
 			if ctx.voice_client is not None:
 				ctx.voice_client.resume()
