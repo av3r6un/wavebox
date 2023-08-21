@@ -108,11 +108,10 @@ class WaveBox(commands.Cog):
 		embed.add_field(name="Причина", value=text)
 		return embed
 
-	@staticmethod
-	def clear_static():
-		files = os.listdir('static/music')
+	def clear_static(self):
+		files = os.listdir(f'{self.s.STORAGE}/music')
 		for file in files:
-			os.remove(f'static/music/{file}')
+			os.remove(f'{self.s.STORAGE}/music/{file}')
 
 	@commands.Cog.listener()
 	async def on_voice_state_update(self, member, before, after):

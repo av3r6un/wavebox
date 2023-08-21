@@ -8,6 +8,8 @@ import os
 class Settings:
 	FFMPEG_OPTIONS = None
 	MESSAGES = None
+	STORAGE = None
+	BASE_STORAGE = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../main/')
 
 	def __init__(self):
 		self.existing_settings = None
@@ -18,6 +20,7 @@ class Settings:
 			with open('configs/settings.yaml', 'r', encoding='utf-8') as file:
 				setts = yaml.safe_load(file)
 			self.existing_settings = setts
+			self.STORAGE = os.path.join(self.BASE_STORAGE, setts['static_folder'])
 			self.__dict__.update(DefaultMunch.fromDict(setts, default=object()))
 			self.MESSAGES = DefaultMunch.fromDict(setts['messages'], default=object())
 		else:
